@@ -1,49 +1,37 @@
-import { StyleSheet, Text, View, Pressable } from 'react-native';  // ייבוא Pressable
 import React from 'react';
-import { deleteData } from '../../services/crud/delete';
+import { StyleSheet, Text, View, Pressable } from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
+import { deleteTodo } from '../../src/store/todoSlice';
+import { deleteData } from '../../services/generic_functions_CRUD/remove';
 
 const DeleteTodo = () => {
-  const handleDeleteTodo = () => {
-    const id = 1;  // ניתן להגדיר כאן מזהה דינמי אם יש צורך
-    if (id) {  // וידוא שהמזהה תקין לפני מחיקה
-      const path = `todos/${id}`;  // יצירת הנתיב עם המזהה
-      deleteData(path)
-        .then(() => {
-          console.log(path, 'Task deleted successfully!');
-        })
-        .catch((error) => {
-          console.error('Error deleting task:', error);
-        });
-    } else {
-      console.error('Invalid ID, cannot delete task');
+  const dispatch = useDispatch();
+  const todos = useSelector((state) => state.todos.todos); // Accessing the todos array correctly
+
+  const handleDeleteTodo = async (id) => {
+    try {
+      await deleteData(`todos/${id}`);
+      dispatch(deleteTodo(id));
+      console.log('Task deleted successfully!');
+    } catch (error) {
+      console.error('Error deleting task:', error);
     }
   };
 
-const handleDeleteAllTodos = () => {
-  const path = 'todos';  // יצירת הנתיב למחיקת כל המשימות
-  deleteData(path)
-    .then(() => {
-      currentId = 0;  // לאתחל את ה-currentId ל-0 לאחר מחיקת כל המשימות
-      setLoaded(false); // לבטל את המצב של טוען כדי שנרענן את המידע מחדש
-      getMaxId(); // קריאה כדי לוודא שהמזהה מתחיל מאפס שוב
-      console.log(path, 'All tasks deleted successfully!');
-    })
-    .catch((error) => {
-      console.error('Error deleting all tasks:', error);
-    });
-};
-
-
-
   return (
     <View style={styles.container}>
-      <Text>Delete a task</Text>
-      <Pressable style={styles.button} onPress={handleDeleteTodo}>
-        <Text style={styles.buttonText}>Delete Task</Text>
-      </Pressable>
-      <Pressable style={[styles.button, styles.deleteAllButton]} onPress={handleDeleteAllTodos}>
-        <Text style={styles.buttonText}>Delete All Tasks</Text>
-      </Pressable>
+      {Array.isArray(todos) && todos.length > 0 ? (
+        todos.map((todo) => (
+          <View key={todo.id} style={styles.todoContainer}>
+            <Text style={styles.todoText}>{todo.title}</Text>
+            <Pressable style={styles.button} onPress={() => handleDeleteTodo(todo.id)}>
+              <Text style={styles.buttonText}>Delete Task</Text>
+            </Pressable>
+          </View>
+        ))
+      ) : (
+        <Text>No tasks available</Text>
+      )}
     </View>
   );
 };
@@ -56,15 +44,20 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  todoContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  todoText: {
+    fontSize: 18,
+    marginRight: 10,
+  },
   button: {
-    backgroundColor: '#FF3E3E',  // צבע כפתור מחיקה אדום
+    backgroundColor: '#FF0000',
     padding: 10,
     borderRadius: 5,
     alignItems: 'center',
-    margin: 10,
-  },
-  deleteAllButton: {
-    backgroundColor: '#DC143C',  // צבע כהה יותר למחיקת כל המשימות
   },
   buttonText: {
     color: '#FFFFFF',

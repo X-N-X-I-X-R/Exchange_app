@@ -1,10 +1,7 @@
-import { ref, get } from "firebase/database";  // ref = reference to the database location we want to read from 
-import { database } from '../firebase'; // database = the Firebase Realtime Database service from file firebase.js 
+import { ref, get } from "firebase/database";
+import { database } from '../firebase';
 
-
-
-// Get data from the database at the specified path 
-export const getData = async (path) => {                                             
+export const getData = async (path) => {
   const dbRef = ref(database, path);
   try {
     const snapshot = await get(dbRef);
@@ -18,6 +15,10 @@ export const getData = async (path) => {
     console.error(error);
   }
 };
+
+export default getData;
+
+
 
 // get data is async function that takes a path as an argument and returns the data at that path in the database  (if it exists) 
 // the function first creates a reference to the database location we want to read from using the ref function from the firebase/database module 

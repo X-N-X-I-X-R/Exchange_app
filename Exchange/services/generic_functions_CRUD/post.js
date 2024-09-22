@@ -1,7 +1,10 @@
 import { ref, set } from "firebase/database";
 import { database } from '../firebase';
 
+
+
 export const postData = async(path, data) => {
+
   return set(ref(database, path), data)
     .then(() => {
       console.log("Data saved successfully!");
