@@ -13,6 +13,8 @@ export const updateData = async (path, data) => {
     });
 };
 
+export default updateData;  
+
 
 // updateData is an async function that takes a path and data as arguments and updates the data at that path in the database
 // the function first creates an object containing the path and data to be updated

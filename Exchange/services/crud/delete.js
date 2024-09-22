@@ -13,6 +13,10 @@ export const deleteData = async (path) => {
 
 
 
+
+
+
+
 // deleteData is an async function that takes a path as an argument and deletes the data at that path in the database
 // the function first creates a reference to the database location we want to delete from using the ref function from the firebase/database module
 // then it deletes the data at that location using the remove function from the same module
